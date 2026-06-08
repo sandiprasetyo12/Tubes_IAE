@@ -105,6 +105,7 @@ app.post('/services', async (req, res) => {
         res.status(500).json({ message: "Gagal menambahkan paket laundry", error: error.message });
     }
 });
+
 //Endpoint untuk menghapus paket laundry
 app.delete('/services/:id', async (req, res) => {
     try {
