@@ -73,6 +73,7 @@ app.post('/services', async (req, res) => {
     res.status(201).json(response.data);
 });
 
+
 //hapus data paket laundry berdasarkan id
 app.delete('/services/:id', async (req, res) => {
     const response = await axios.delete(`${SERVICES.servicePackage}/services/${req.params.id}`);
