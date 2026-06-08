@@ -27,7 +27,14 @@ app.get('/', (req, res) => {
             '/services/:id'            : 'GET paket laundry by ID',
             '/transactions'            : 'GET semua transaksi',
             '/transactions (POST)'     : 'Buat transaksi baru',
+            '/transactions/:id'        : 'GET transaksi by ID',
+            '/transactions/:id (PUT)'  : 'Update status transaksi',
+            '/transactions/:id (DELETE)': 'Hapus transaksi',
             '/customers'               : 'GET semua customer',
+            '/customers/:id'           : 'GET customer by ID',
+            '/customers (POST)'        : 'Tambah customer baru',
+            '/customers/:id (PUT)'     : 'Update data customer',
+            '/customers/:id (DELETE)'  : 'Hapus customer',
             '/reports'                 : 'GET laporan keuangan'
         }
     });
@@ -86,6 +93,21 @@ app.post('/transactions', async (req, res) => {
     res.status(201).json(response.data);
 });
 
+app.get('/transactions/:id', async (req, res) => {
+    const response = await axios.get(`${SERVICES.transaction}/transactions/${req.params.id}`);
+    res.json(response.data);
+});
+
+app.put('/transactions/:id', async (req, res) => {
+    const response = await axios.put(`${SERVICES.transaction}/transactions/${req.params.id}`, req.body);
+    res.json(response.data);
+});
+
+app.delete('/transactions/:id', async (req, res) => {
+    const response = await axios.delete(`${SERVICES.transaction}/transactions/${req.params.id}`);
+    res.json(response.data);
+});
+
 // =====================
 // Proxy ke Customer Service
 // =====================
@@ -97,6 +119,21 @@ app.get('/customers', async (req, res) => {
 app.post('/customers', async (req, res) => {
     const response = await axios.post(`${SERVICES.customer}/customers`, req.body);
     res.status(201).json(response.data);
+});
+
+app.get('/customers/:id', async (req, res) => {
+    const response = await axios.get(`${SERVICES.customer}/customers/${req.params.id}`);
+    res.json(response.data);
+});
+
+app.put('/customers/:id', async (req, res) => {
+    const response = await axios.put(`${SERVICES.customer}/customers/${req.params.id}`, req.body);
+    res.json(response.data);
+});
+
+app.delete('/customers/:id', async (req, res) => {
+    const response = await axios.delete(`${SERVICES.customer}/customers/${req.params.id}`);
+    res.json(response.data);
 });
 
 // =====================

@@ -95,6 +95,37 @@ def add_customer():
     cursor.close()
     return jsonify({'message': 'Customer berhasil ditambahkan', 'id': new_id}), 201
 
+# Endpoint update data customer
+@app.route('/customers/<int:id>', methods=['PUT'])
+def update_customer(id):
+    data = request.get_json()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM customers WHERE id = %s", (id,))
+    if cursor.fetchone() is None:
+        cursor.close()
+        return jsonify({'message': 'Customer tidak ditemukan'}), 404
+    cursor.execute(
+        "UPDATE customers SET nama = %s, nomor_hp = %s, alamat = %s WHERE id = %s",
+        (data['nama'], data['nomor_hp'], data['alamat'], id)
+    )
+    db.commit()
+    cursor.close()
+    return jsonify({'message': 'Customer berhasil diupdate', 'id': id})
+
+# Endpoint hapus customer
+@app.route('/customers/<int:id>', methods=['DELETE'])
+def delete_customer(id):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM customers WHERE id = %s", (id,))
+    row = cursor.fetchone()
+    if row is None:
+        cursor.close()
+        return jsonify({'message': 'Customer tidak ditemukan'}), 404
+    cursor.execute("DELETE FROM customers WHERE id = %s", (id,))
+    db.commit()
+    cursor.close()
+    return jsonify({'message': 'Customer berhasil dihapus', 'id': id})
+
 # Jalankan server
 if __name__ == '__main__':
     connect_with_retry()

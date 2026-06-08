@@ -90,6 +90,44 @@ app.post('/transactions', async (req, res) => {
     }
 });
 
+// READ - Ambil transaksi by ID
+app.get('/transactions/:id', async (req, res) => {
+    try {
+        const transaction = await Transaction.findById(req.params.id);
+        if (!transaction) return res.status(404).json({ message: 'Transaksi tidak ditemukan' });
+        res.json({ service: 'transaction-service', data: transaction });
+    } catch (error) {
+        res.status(500).json({ message: 'Gagal mengambil transaksi', error: error.message });
+    }
+});
+
+// UPDATE - Update status transaksi
+app.put('/transactions/:id', async (req, res) => {
+    try {
+        const { status } = req.body;
+        const transaction = await Transaction.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+        if (!transaction) return res.status(404).json({ message: 'Transaksi tidak ditemukan' });
+        res.json({ message: 'Transaksi berhasil diupdate', data: transaction });
+    } catch (error) {
+        res.status(500).json({ message: 'Gagal mengupdate transaksi', error: error.message });
+    }
+});
+
+// DELETE - Hapus transaksi
+app.delete('/transactions/:id', async (req, res) => {
+    try {
+        const transaction = await Transaction.findByIdAndDelete(req.params.id);
+        if (!transaction) return res.status(404).json({ message: 'Transaksi tidak ditemukan' });
+        res.json({ message: 'Transaksi berhasil dihapus', data: transaction });
+    } catch (error) {
+        res.status(500).json({ message: 'Gagal menghapus transaksi', error: error.message });
+    }
+});
+
 // Jalankan server
 async function startServer() {
     await connectWithRetry();
