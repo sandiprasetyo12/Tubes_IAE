@@ -24,7 +24,7 @@ async function  conneectWithRetry(retries = 20, delay = 3000) {
             console.log("Service Package berhasil terhubung ke MySQL");
             return;
         } catch (error) {
-            console.error('Gagal terhubung ke MySQL,percobaan ke ${attempt}');
+            console.error(`Gagal terhubung ke MySQL, percobaan ke ${attempt}`);
             await new Promise(resolve => setTimeout(resolve, delay));
         }
     }
@@ -103,6 +103,23 @@ app.post('/services', async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: "Gagal menambahkan paket laundry", error: error.message });
+    }
+});
+
+//Endpoint untuk mengupdate paket laundry
+app.put('/services/:id', async (req, res) => {
+    try {
+        const { name, harga_per_kg, waktu_pengerjaan } = req.body;
+        const [result] = await db.execute(
+            'UPDATE service SET name = ?, harga_per_kg = ?, waktu_pengerjaan = ? WHERE id = ?',
+            [name, harga_per_kg, waktu_pengerjaan, req.params.id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Paket laundry tidak ditemukan" });
+        }
+        res.json({ message: "Paket laundry berhasil diupdate" });
+    } catch (error) {
+        res.status(500).json({ message: "Gagal mengupdate paket laundry", error: error.message });
     }
 });
 //Endpoint untuk menghapus paket laundry

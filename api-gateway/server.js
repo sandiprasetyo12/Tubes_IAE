@@ -25,6 +25,9 @@ app.get('/', (req, res) => {
             '/health-all'              : 'Cek status semua service',
             '/services'                : 'GET semua paket laundry',
             '/services/:id'            : 'GET paket laundry by ID',
+            '/services (POST)'         : 'Tambah paket baru',
+            '/services/:id (PUT)'      : 'Update paket laundry',
+            '/services/:id (DELETE)'   : 'Hapus paket laundry',
             '/transactions'            : 'GET semua transaksi',
             '/transactions (POST)'     : 'Buat transaksi baru',
             '/transactions/:id'        : 'GET transaksi by ID',
@@ -80,6 +83,10 @@ app.post('/services', async (req, res) => {
     res.status(201).json(response.data);
 });
 
+app.put('/services/:id', async (req, res) => {
+    const response = await axios.put(`${SERVICES.servicePackage}/services/${req.params.id}`, req.body);
+    res.json(response.data);
+});
 
 //hapus data paket laundry berdasarkan id
 app.delete('/services/:id', async (req, res) => {
